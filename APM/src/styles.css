@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.css";
+/* the tilde sign simply tells webpack (the engine that powers angular) to look for this in the node_modules folder */
+
+div.card-header {
+ font-size: large;
+}
+
+div.card {
+  margin-top: 10px
+}
+
+.table {
+  margin-top: 10px
+}
+
+a {
+  text-decoration: none; 
+}
+a:hover {
+  text-decoration: underline;
+}
