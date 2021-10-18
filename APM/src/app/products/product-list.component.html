@@ -44,11 +44,16 @@
                   [style.width.px]='imageWidth'
                   [style.height.px]='imageHeight'>
           </td>
-          <td>{{ product.productName }}</td>
+          <td><a [routerLink]="['/products', product.productId]">{{ product.productName }}</a></td>
           <td>{{ product.productCode | lowercase | convertToSpaces:'-' }}</td>
           <td>{{ product.releaseDate }}</td>
           <td>{{ product.price | currency:'USD':'symbol':'1.2-2' }}</td>
-          <td>{{ product.starRating }}</td>
+          <td>
+            <pm-star [rating]='product.starRating'
+                      (ratingClicked)='onRatingClicked($event)'></pm-star>
+          </td>
+          <!-- when you use property binding on a property that is not standard html attribute and is 
+            marked with @Input in the component class the value passed in is sent to the component class-->
         </tr>
       </tbody>
     </table>

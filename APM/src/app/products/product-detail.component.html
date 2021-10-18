@@ -1,0 +1,43 @@
+<div class="card">
+  <div class="card-header">
+    {{pageTitle + ': ' + product?.productName}} 
+    <!-- the ? in front of product is called safe navigation in typescript it checks if an object exists before tring to access its properties -->
+  </div>
+  <div class="row container">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-6">
+          <h6>Name:</h6>
+          <h6>Code:</h6>
+          <h6>Description:</h6>
+          <h6>Availability:</h6>
+          <h6>Price:</h6>
+          <h6>5 Star Rating:</h6>
+        </div>
+        <div class="col-md-6">
+          <h6>{{ product.productName }}</h6>
+          <h6>{{ product.productCode | convertToSpaces:'-' }}</h6>
+          <h6>{{ product.description }}</h6>
+          <h6>{{ product.releaseDate }}</h6>
+          <h6>{{ product.price | currency:'USD':'symbol':'1.2-2' }}</h6>
+          <h6>
+            <pm-star [rating]='product.starRating'></pm-star>
+          </h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <img [src]='product.imageUrl' 
+          alt="{{product.productName}}"
+          [width]='imageWidth'
+          [height]='imageHeight'>
+    </div>
+  </div>
+  <div class="card-footer">
+    <button class="btn btn-outline-secondary"
+        style='width: 80px'
+        (click)='onBack()'>
+      <i class="fa fa-chevron-left"></i> Back  
+    </button>
+  </div>
+</div>

@@ -1,16 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ProductService } from './product.service';
 import { IProduct } from './products';
 
 @Component({
-  selector: 'pm-products',
-  templateUrl: './product-list.component.html',
+  templateUrl: './product-list.component.html', // notice this compononet doesnt have a selector that is because it is not needed since it is a full view (full page)
+                                                // it is not nested in another component
   styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, OnDestroy {
+
+  constructor(private productService: ProductService) {}; // this is just neat syntax the actual thing it does is this -
+  /*
+    private _productService: ProductService;
+    constructor(productService: ProductService) {
+      this._productService = productService;
+    }
+  */
+
+  // angular recommends you write it with the simpler syntax, also the productService parameter is passed in automatically because in the product 
+  // service you specified its provideIn property to be root (the whole app);
+
   pageTitle: string = 'Product List';
   imageWidth: number = 50;
   imageHeight: number = 50;
   showImage: boolean = false;
+  errorMessage: string = '';
+  sub!: Subscription; // the bang sign or exclamation mark means i wount be assigning the value now, normally you have to in typescript
   
   // by convention private variables are prefixed with _
   private _listFilter: string = '';
@@ -28,28 +44,7 @@ export class ProductListComponent implements OnInit {
   }
 
   filteredProducts: IProduct[] = [];
-  products: IProduct[] = [
-    {
-      productId: 8,
-      productName: 'Saw',
-      productCode: 'TBX-0022',
-      releaseDate: 'May 15, 2021',
-      description: '15-inch steel blade hand saw',
-      price: 11.55,
-      starRating: 3.7,
-      imageUrl: 'assets/images/saw.png',
-    },
-    {
-      productId: 10,
-      productName: 'Video Game Controller',
-      productCode: 'GMG-0042',
-      releaseDate: 'October 15, 2020',
-      description: 'Standard two-button video game controller',
-      price: 35.95,
-      starRating: 4.6,
-      imageUrl: 'assets/images/xbox-controller.png',
-    },
-  ];
+  products: IProduct[] = [];
 
   toggleImage(): void {
     this.showImage = !this.showImage;
@@ -63,8 +58,22 @@ export class ProductListComponent implements OnInit {
     
   }
 
+  onRatingClicked(msg: string): void {
+    this.pageTitle = 'Product List ' + msg;
+  }
+
   ngOnInit(): void {
-    this.listFilter = 'cart'; // note I'm not calling _listFilter directly I'm calling listFilter's setter
+    this.sub = this.productService.getProducts().subscribe({
+      next: (data) => {
+        this.products = data;
+        this.filteredProducts = this.products;
+      },
+      error: err => this.errorMessage = err
+    })
     console.log("in OnInit");
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 }
